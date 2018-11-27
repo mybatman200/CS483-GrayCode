@@ -11,15 +11,9 @@ public class Main {
         int [][] record = new int[10000][20];
         record = RecordsGenerator();
         int count =0;
-        /*for(int i=0; i<record.length;i++){
-           for(int a =0; a<record[i].length; a++){
 
-               System.out.print(record[i][a] + " ");
-           }
-           System.out.print("\n");
-        }*/
-        int [][] newRecord = new int[10000][20];
-        RadixSort1(record);
+        int [][] radixRecord = new int[10000][20];
+        radixRecord = RadixSort1(record);
     }
 
     public static int[][] RecordsGenerator(){
@@ -40,16 +34,7 @@ public class Main {
         return fields;
     }
 
-/*    public static int[][] RadixSort(int [][] record){
-        int numb_iteration = 0;
-        int [][] newRecord = new int[10000][20];
-        for(int i=record.length-1; i<record.length; i--){
-            System.out.print(record[i]);
-        }
-        return newRecord;
-
-    }*/
-    public static void RadixSort1(int [][] record){
+    public static int[][] RadixSort1(int [][] record){
         int numb_iteration = 0;
         int[][] arrayOrdered = new int[10000][20];
 
@@ -91,7 +76,9 @@ public class Main {
                 }else{
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
                     for(int arr=0; arr<tempArray.size();arr++) {
-                        tempArrayOrdered[arrCounter] = reverse(tempArray.get(arr));
+                        //tempArrayOrdered[arrCounter] = reverse(tempArray.get(arr));
+                        tempArrayOrdered[arrCounter] = tempArray.get(arr);
+
                         arrCounter++;
                     }
                 }
@@ -103,12 +90,14 @@ public class Main {
 
 
         for(int i=0; i<record.length;i++){
+            record[i] = reverse(record[i]);
             for(int a =0; a<record[i].length; a++){
 
                 System.out.print(record[i][a] + " ");
             }
             System.out.print("\n");
         }
+        return record;
     }
 
     public static int[] reverse(int[] objectArray){
