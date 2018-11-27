@@ -1,4 +1,6 @@
 package com.company;
+import com.sun.tools.javac.util.ArrayUtils;
+
 import java.util.*;
 import java.math.*;
 import java.lang.*;
@@ -49,11 +51,13 @@ public class Main {
     }*/
     public static void RadixSort1(int [][] record){
         int numb_iteration = 0;
-        int[][]tempArrayOrdered = new int[10000][20];
-        //for(int i=record[0].length-1; i>=0; i--){
+        int[][] arrayOrdered = new int[10000][20];
+
         for(int i=0; i<20; i++){
+            int[][]tempArrayOrdered = new int[10000][20];
 
             HashMap<Integer, ArrayList<int[]>> sortedHash = new HashMap<Integer, ArrayList<int[]>>();
+            int numbCount=0;
             for(int a=0; a<record.length;a++) {
                 numb_iteration++;
                 ArrayList<int[]> tempArray = new ArrayList<int[]>();
@@ -67,7 +71,6 @@ public class Main {
                     tempArray.add(record[a]);
                     sortedHash.put(numb, tempArray);
                 }
-                //System.out.println(numb);
             }
             ArrayList<Integer> sortedKeyList = new ArrayList<Integer>();
             for(int key: sortedHash.keySet()){
@@ -87,26 +90,36 @@ public class Main {
                     }
                 }else{
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
-                    Collections.reverse(tempArray);
                     for(int arr=0; arr<tempArray.size();arr++) {
-                        tempArrayOrdered[arrCounter] = tempArray.get(arr);
+                        tempArrayOrdered[arrCounter] = reverse(tempArray.get(arr));
                         arrCounter++;
                     }
                 }
                 counter++;
             }
 
+            record = tempArrayOrdered;
         }
+
+
         for(int i=0; i<record.length;i++){
             for(int a =0; a<record[i].length; a++){
 
-                System.out.print(tempArrayOrdered[i][a] + " ");
+                System.out.print(record[i][a] + " ");
             }
             System.out.print("\n");
         }
+    }
 
+    public static int[] reverse(int[] objectArray){
+        for(int i = 0; i < objectArray.length / 2; i++)
+        {
+            int temp = objectArray[i];
+            objectArray[i] = objectArray[objectArray.length - i - 1];
+            objectArray[objectArray.length - i - 1] = temp;
+        }
 
-
+        return objectArray;
     }
 
 }
