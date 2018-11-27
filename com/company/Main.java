@@ -14,6 +14,10 @@ public class Main {
 
         int [][] radixRecord = new int[10000][20];
         radixRecord = RadixSort1(record);
+
+
+
+
     }
 
     public static int[][] RecordsGenerator(){
@@ -91,11 +95,11 @@ public class Main {
 
         for(int i=0; i<record.length;i++){
             record[i] = reverse(record[i]);
-            for(int a =0; a<record[i].length; a++){
+            /*for(int a =0; a<record[i].length; a++){
 
                 System.out.print(record[i][a] + " ");
             }
-            System.out.print("\n");
+            System.out.print("\n");*/
         }
         return record;
     }
