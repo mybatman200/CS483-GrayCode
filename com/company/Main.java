@@ -9,16 +9,122 @@ public class Main {
     public static void main(String[] args) {
 
         int [][] record = new int[10000][20];
+        int [][] record2 = new int[10000][20];
         record = RecordsGenerator();
+        record2 = RecordsGenerator();
+
         int count =0;
 
         int [][] radixRecord = new int[10000][20];
         radixRecord = RadixSort1(record);
 
+        int [] recordX = {0,0,0,0};
+        int [] recordY = {0,0,0,1};
 
+        Boolean truFals = GrayCode(recordX, recordY);
 
+        record2 = MergeSort(record2,0, record2.length-1);
+        printRecords(record2);
+    }
+
+    public static boolean GrayCode(int[] X, int [] Y){
+
+        int d=-1;
+        int totalD =0;
+        for(int i=-1; i<X.length-1;i++){
+            if(X[i+1] != Y[i+1]){
+                d = i;
+                break;
+                //System.out.println(d);
+            }
+        }
+        for(int i=0; i<d+1; i++){
+            totalD = totalD+X[i];
+            //System.out.println("HELLO " + totalD);
+        }
+
+        if(totalD%2 ==0){
+            return X[d+1]<Y[d+1];
+        }
+        else{
+            return Y[d+1]<X[d+1];
+        }
 
     }
+
+    public static int Partition(int[][]record, int left, int right){
+        int[] pivot = record[right];
+        /*for(int i=0; i<pivot.length; i++){
+            System.out.print(pivot[i]);
+        }
+        System.out.print("\n");*/
+        int [] temp;
+        int i = left;
+
+        for (int j=left; j<right;j++){
+            if(GrayCode(record[j],pivot)){
+                temp = record[j];
+                record[j] = record[i];
+                record[i] = temp;
+                i += 1;
+            }
+        }
+
+        temp = record[right];
+        record[right] = record[i];
+        record[i] = temp;
+        return i;
+    }
+
+    public static int[][] QuickSort(int[][] record, int left, int right){
+        if(left<=right){
+            int pi = Partition(record, left,right);
+            QuickSort(record, left, pi-1);
+            QuickSort(record, pi+1, right);
+        }
+        return record;
+    }
+
+    public static int[][] MergeSort(int [][] record1, int left, int right) {
+
+        if (left < right) {
+            int middle = left + (right - left) / 2;
+            MergeSort(record1,left, middle);
+            MergeSort(record1,middle + 1, right);
+            merge(record1, left, middle, right);
+        }
+        return record1;
+    }
+
+    public static void merge(int[][]numbers,int left, int middle, int right) {
+        int [][] helper = new int [10000][20];
+        for (int i = left; i <= right; i++) {
+            helper[i] = numbers[i];
+        }
+
+        int i = left;
+        int j = middle + 1;
+        int k = left;
+
+        while (i <= middle && j <= right) {
+            if (GrayCode(helper[i] , helper[j])) {
+                numbers[k] = helper[i];
+                i++;
+            } else {
+                numbers[k] = helper[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i <= middle) {
+            numbers[k] = helper[i];
+            k++;
+            i++;
+        }
+    }
+
+
 
     public static int[][] RecordsGenerator(){
         int[][] record = new int[10000][20];
@@ -100,13 +206,19 @@ public class Main {
 
         for(int i=0; i<record.length;i++){
             record[i] = reverse(record[i]);
-            /*for(int a =0; a<record[i].length; a++){
+        }
+        return record;
+    }
+
+    public static void printRecords(int[][]record){
+        for(int i=0; i<record.length;i++){
+            //record[i] = reverse(record[i]);
+            for(int a =0; a<record[i].length; a++){
 
                 System.out.print(record[i][a] + " ");
             }
-            System.out.print("\n");*/
+            System.out.print("\n");
         }
-        return record;
     }
 
     public static int[] reverse(int[] objectArray){
@@ -120,23 +232,6 @@ public class Main {
         return objectArray;
     }
 
-    public static boolean GrayCode(int[] X, int [] Y){
 
-        int d=0;
-        int totalD =0;
-        for(int i=-1; i<X.length-1;i++){
-            if(X[i+1] != Y[i+1]){
-                d = i;
-            }
-        }
-        for(int i=0; i<d; i++){
-            totalD = totalD+X[i];
-        }
-
-        return true;
-
-
-
-    }
 
 }
