@@ -40,36 +40,41 @@ public class Main {
 
     public static int[][] RadixSort1(int [][] record){
         int numb_iteration = 0;
-        int[][] arrayOrdered = new int[10000][20];
 
         for(int i=0; i<20; i++){
             int[][]tempArrayOrdered = new int[10000][20];
 
-            HashMap<Integer, ArrayList<int[]>> sortedHash = new HashMap<Integer, ArrayList<int[]>>();
+            HashMap<Integer, ArrayList<int[]>> sortedHash = new HashMap<Integer, ArrayList<int[]>>(); // Store a key and its value of each of the element of the array and key is the element at the field
             int numbCount=0;
-            for(int a=0; a<record.length;a++) {
-                numb_iteration++;
-                ArrayList<int[]> tempArray = new ArrayList<int[]>();
-                int numb = record[a][i];
 
-                if(!sortedHash.containsKey(numb)){
+            for(int a=0; a<record.length;a++) {
+
+                numb_iteration++;
+
+                ArrayList<int[]> tempArray = new ArrayList<int[]>();
+                int numb = record[a][i]; // element at each record
+
+                if(!sortedHash.containsKey(numb)){ // check if the element is in the hashmap, if not then store it and its array
                     tempArray.add(record[a]);
                     sortedHash.put(numb, tempArray);
                 }else{
-                    tempArray = sortedHash.get(numb);
+                    tempArray = sortedHash.get(numb); // if it's a available, then store it array with the key
                     tempArray.add(record[a]);
                     sortedHash.put(numb, tempArray);
                 }
             }
-            ArrayList<Integer> sortedKeyList = new ArrayList<Integer>();
+            ArrayList<Integer> sortedKeyList = new ArrayList<Integer>();// store a sortedkeylist
             for(int key: sortedHash.keySet()){
                 sortedKeyList.add(key);
+
             }
-            Collections.sort(sortedKeyList);
+            Collections.sort(sortedKeyList);// sort the key
 
             //System.out.println(sortedKeyList.toString());
             int counter=0;
             int arrCounter =0;
+
+            //get key from the sorted keylist and append it into the array
             for(int a=0; a<sortedKeyList.size();a++){
                 if(counter%2 ==0){
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
@@ -113,6 +118,25 @@ public class Main {
         }
 
         return objectArray;
+    }
+
+    public static boolean GrayCode(int[] X, int [] Y){
+
+        int d=0;
+        int totalD =0;
+        for(int i=-1; i<X.length-1;i++){
+            if(X[i+1] != Y[i+1]){
+                d = i;
+            }
+        }
+        for(int i=0; i<d; i++){
+            totalD = totalD+X[i];
+        }
+
+        return true;
+
+
+
     }
 
 }
