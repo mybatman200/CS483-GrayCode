@@ -9,6 +9,9 @@ import java.math.*;
 import java.lang.*;
 public class Main {
 
+    static int record1Iter=0;
+    static int record2Iter =0;
+    static int record3Iter = 0;
     public static void main(String[] args) throws IOException {
 
         int [][] record = new int[10000][20];
@@ -96,24 +99,10 @@ public class Main {
 
     }
 
-    public static long rank(int [] record, int [] nis){
-
-        long i=record[0];
-        long nj= 0;
-        long i2 = 0;
-        for(int j=1; j<record.length-1;j++){
-            nj = nis[j];
-            if(i%2==0){
-                i2=record[j];
-            }else{
-                i2 = nj-1-record[j];
-            }
-            i= (i* nj) + i2;
-        }
-
-        return i;
-    }
-
+    /**
+     *RankSort
+     * support methods: rank(), GrayCodeHorners()
+     */
     public static long[][] RankSort(int[][] record, int[]nis){
 
         long [][] record2 = new long[10000][21];
@@ -123,30 +112,39 @@ public class Main {
 
             int[] r = record[s];
             long i = 0;
-            //int nj=0;
             record2[s][0]=record[s][0];
             i = rank(record[s], nis);
             for(int j=1; j<r.length; j++){
                 record2[s][j]=record[s][j];
-//                nj = nis[j];
-//                int i2;
-//                if(i % 2== 0){
-//                    i2= r[j];
-//                }
-//                else{
-//                    i2 = nj - 1 -r[j];
-//                }
-//                i= ((i*nj) + i2);
-
             }
             record2[s][20] = i;
 
         }
 
-        record2 = QuickSort(record2, 0, record2.length-1);
+        record2 = MergeSort(record2, 0, record2.length-1);
 
         return record2;
     }
+    public static long rank(int [] record, int [] nis){
+
+        long i=record[0];
+        long n= 0;
+
+        for(int j=1; j<record.length-1;j++){
+            long i2 = 0;
+            n = nis[j];
+            if(i%2==0){
+                i2=record[j];
+            }else{
+                i2 = n-1-record[j];
+            }
+            i= (i* n) + i2;
+        }
+
+        return i;
+    }
+
+
 
     public static boolean GrayCodeHorners(long[] X, long [] Y){
 
@@ -159,6 +157,20 @@ public class Main {
 
     }
 
+    /**
+        QuickSort()
+        support method: Partition()
+     */
+
+    public static long[][] QuickSort(long[][] record, int left, int right){
+        if(left<=right){
+            record1Iter++;
+            int pi = Partition(record, left,right);
+            QuickSort(record, left, pi-1);
+            QuickSort(record, pi+1, right);
+        }
+        return record;
+    }
 
     public static int Partition(long[][]record, int left, int right){
         long[] pivot = record[right];
@@ -176,6 +188,7 @@ public class Main {
                 record[i] = temp;
                 i += 1;
             }
+            record1Iter++;
         }
 
         temp = record[right];
@@ -184,18 +197,15 @@ public class Main {
         return i;
     }
 
-    public static long[][] QuickSort(long[][] record, int left, int right){
-        if(left<=right){
-            int pi = Partition(record, left,right);
-            QuickSort(record, left, pi-1);
-            QuickSort(record, pi+1, right);
-        }
-        return record;
-    }
 
+    /**
+        MergeSort
+        support method: merge()
+     */
     public static int[][] MergeSort(int [][] record1, int left, int right) {
 
         if (left < right) {
+            record1Iter++;
             int middle = left + (right - left) / 2;
             MergeSort(record1,left, middle);
             MergeSort(record1,middle + 1, right);
@@ -208,6 +218,7 @@ public class Main {
         int [][] helper = new int [10000][20];
         for (int i = left; i <= right; i++) {
             helper[i] = numbers[i];
+            record1Iter++;
         }
 
         int i = left;
@@ -223,34 +234,67 @@ public class Main {
                 j++;
             }
             k++;
+            record1Iter++;
         }
 
         while (i <= middle) {
             numbers[k] = helper[i];
             k++;
             i++;
+            record1Iter++;
         }
     }
 
-    public static int[][] RecordsGenerator(){
-        int[][] record = new int[10000][20];
-        for(int i=0; i<record.length;i++){
-            record[i] = FieldGenerator();
-        }
+    /*
+        MergeSort
+        support method: merge
+     */
+    public static long[][] MergeSort(long [][] record1, int left, int right) {
 
-        return record;
+        if (left < right) {
+            record1Iter++;
+            int middle = left + (right - left) / 2;
+            MergeSort(record1,left, middle);
+            MergeSort(record1,middle + 1, right);
+            merge(record1, left, middle, right);
+        }
+        return record1;
     }
 
-    public static int[] FieldGenerator(){
-        int[] fields = new int[20];
-
-        for(int i=0; i<fields.length; i++){
-            int randomNumber = (int) (Math.random()*((10-1)+1))+1;
-            fields[i]=randomNumber;
+    public static void merge(long[][]numbers,int left, int middle, int right) {
+        long [][] helper = new long [10000][20];
+        for (int i = left; i <= right; i++) {
+            helper[i] = numbers[i];
+            record1Iter++;
         }
-        return fields;
+
+        int i = left;
+        int j = middle + 1;
+        int k = left;
+
+        while (i <= middle && j <= right) {
+            if (GrayCodeHorners(helper[i] , helper[j])) {
+                numbers[k] = helper[i];
+                i++;
+            } else {
+                numbers[k] = helper[j];
+                j++;
+            }
+            k++;
+            record1Iter++;
+        }
+
+        while (i <= middle) {
+            numbers[k] = helper[i];
+            k++;
+            i++;
+            record1Iter++;
+        }
     }
 
+    /**
+    RadixSort Method
+     */
     public static int[][] RadixSort1(int [][] record){
         int numb_iteration = 0;
 
@@ -290,17 +334,13 @@ public class Main {
             for(int a=0; a<sortedKeyList.size();a++){
                 if(counter%2 ==0){
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
-                    //for(int arr=0; arr<tempArray.size();arr++) {
                     for(int arr=tempArray.size()-1; arr>=0;arr--){
                         tempArrayOrdered[arrCounter] = tempArray.get(arr);
                         arrCounter++;
                     }
                 }else{
-                    //Collections.reverse(sortedHash.get(a));
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
-                    //for(int arr=tempArray.size()-1; arr>=0;arr--) {
                     for(int arr=0; arr<tempArray.size();arr++) {
-                        //tempArrayOrdered[arrCounter] = reverse(tempArray.get(arr));
                         tempArrayOrdered[arrCounter] = tempArray.get(arr);
                         arrCounter++;
                     }
@@ -318,6 +358,32 @@ public class Main {
         return record;
     }
 
+    /**
+     Generate random number from 1-10 for the whole dataset
+     Support method: FieldGenerator
+     */
+    public static int[][] RecordsGenerator(){
+        int[][] record = new int[10000][20];
+        for(int i=0; i<record.length;i++){
+            record[i] = FieldGenerator();
+        }
+
+        return record;
+    }
+
+    public static int[] FieldGenerator(){
+        int[] fields = new int[20];
+
+        for(int i=0; i<fields.length; i++){
+            int randomNumber = (int) (Math.random()*((10-1)+1))+1;
+            fields[i]=randomNumber;
+        }
+        return fields;
+    }
+
+    /**
+        print records method for testing
+     */
     public static void printRecords(int[][]record){
         for(int i=0; i<record.length;i++){
             //record[i] = reverse(record[i]);
@@ -328,6 +394,7 @@ public class Main {
             System.out.print("\n");
         }
     }
+
     public static void printRecords(long[][]record){
         for(int i=0; i<record.length;i++){
             //record[i] = reverse(record[i]);
@@ -338,6 +405,7 @@ public class Main {
             System.out.print("\n");
         }
     }
+
 
     public static int[] reverse(int[] objectArray){
         for(int i = 0; i < objectArray.length / 2; i++)
@@ -350,6 +418,9 @@ public class Main {
         return objectArray;
     }
 
+    /**
+        Method to write records to file
+     */
     public static void WriteToFile(int[][] record, String name) throws IOException{
         String strFilePath = "/Users/tringuyen/Desktop/"+name;
         BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
