@@ -1,3 +1,10 @@
+/***
+ * Tri Nguyen
+ * G00909218
+ * tnguy145
+ * Gray-Order Algorithm
+ */
+
 package com.company;
 import com.sun.tools.javac.util.ArrayUtils;
 
@@ -67,6 +74,7 @@ public class Main {
 
         System.out.println("Before Binary Score Average: " + (beforeBinaryTotal/10) + " Before Full Score Average: " + (beforeFullTotal/10));
         System.out.println("After Binary Score Average: " + (afterBinaryTotal/10) + " After Full Score Average: " + (afterFullTotal/10));
+
 
 
     }
