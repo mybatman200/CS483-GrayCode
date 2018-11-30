@@ -1,13 +1,15 @@
 package com.company;
 import com.sun.tools.javac.util.ArrayUtils;
 
+
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.math.*;
 import java.lang.*;
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         int [][] record = new int[10000][20];
         int [][] record2 = new int[10000][20];
@@ -36,10 +38,16 @@ public class Main {
         radixRecord = RadixSort1(record);
         printRecords(radixRecord);
 
-        record2 = MergeSort(record2,0, record2.length-1);
+        int [][] grayOrderRecord = new int[10000][20];
+        grayOrderRecord = MergeSort(record2,0, record2.length-1);
         //printRecords(record2);
 
-        long [][]record31 = RankSort(record3, nis);
+        long [][]hornersRecord = RankSort(record3, nis);
+        WriteToFile(radixRecord,"radixRecord.txt");
+        WriteToFile(grayOrderRecord,"grayOrderRecord.txt");
+        WriteToFile(hornersRecord,"hornersRecord.txt");
+
+
         //printRecords(record31);
     }
 
@@ -275,7 +283,6 @@ public class Main {
             }
             Collections.sort(sortedKeyList);// sort the key
 
-            //System.out.println(sortedKeyList.toString());
             int counter=0;
             int arrCounter =0;
 
@@ -283,15 +290,17 @@ public class Main {
             for(int a=0; a<sortedKeyList.size();a++){
                 if(counter%2 ==0){
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
-                    for(int arr=0; arr<tempArray.size();arr++) {
+                    //for(int arr=0; arr<tempArray.size();arr++) {
+                    for(int arr=tempArray.size()-1; arr>=0;arr--){
                         tempArrayOrdered[arrCounter] = tempArray.get(arr);
                         arrCounter++;
                     }
                 }else{
+                    //Collections.reverse(sortedHash.get(a));
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
+                    //for(int arr=tempArray.size()-1; arr>=0;arr--) {
                     for(int arr=0; arr<tempArray.size();arr++) {
                         //tempArrayOrdered[arrCounter] = reverse(tempArray.get(arr));
-                        //Collections.reverse(tempArray.get(arr));
                         tempArrayOrdered[arrCounter] = tempArray.get(arr);
                         arrCounter++;
                     }
@@ -340,6 +349,42 @@ public class Main {
 
         return objectArray;
     }
+
+    public static void WriteToFile(int[][] record, String name) throws IOException{
+        String strFilePath = "/Users/tringuyen/Desktop/"+name;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
+        writer.append("");
+        String str = "";
+        for(int i=0;i<record.length;i++){
+            for(int j=0; j<record[i].length; j++){
+                str = record[i][j]+" ";
+                writer.append(str);
+            }
+            str = "\n";
+            writer.append(str);
+        }
+
+        writer.close();
+
+    }
+    public static void WriteToFile(long[][] record, String name) throws IOException{
+        String strFilePath = "/Users/tringuyen/Desktop/"+name;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
+        writer.append("");
+        String str = "";
+        for(int i=0;i<record.length;i++){
+            for(int j=0; j<record[i].length; j++){
+                str = record[i][j]+" ";
+                writer.append(str);
+            }
+            str = "\n";
+            writer.append(str);
+        }
+
+        writer.close();
+
+    }
+
 
 
 
