@@ -1,6 +1,7 @@
 package com.company;
 import com.sun.tools.javac.util.ArrayUtils;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.math.*;
 import java.lang.*;
@@ -10,23 +11,58 @@ public class Main {
 
         int [][] record = new int[10000][20];
         int [][] record2 = new int[10000][20];
-        record = RecordsGenerator();
-        record2 = RecordsGenerator();
+        int [][] record3 = new int[10000][20];
+
+        /**
+         * Generating Nis randomly from 1-10
+         */
+//        record = RecordsGenerator();
+//        record2 = record;
+        //record3 = record;
+
+
+        /**
+         * Generating each Nis randomly
+         */
+        int []nis = NIsGenerator();
+        record = randomNumberGenerator(nis);
+        record2 = record;
+        record3 = record;
+        /***/
 
         int count =0;
 
         int [][] radixRecord = new int[10000][20];
         radixRecord = RadixSort1(record);
-
-        int [] recordX = {0,0,0,0};
-        int [] recordY = {0,0,0,1};
-
-        Boolean truFals = GrayCode(recordX, recordY);
+        printRecords(radixRecord);
 
         record2 = MergeSort(record2,0, record2.length-1);
-        printRecords(record2);
+        //printRecords(record2);
+
+        long [][]record31 = RankSort(record3, nis);
+        //printRecords(record31);
     }
 
+    public static int[][] randomNumberGenerator(int []nis){
+
+        int [][] records= new int[10000][20];
+        for(int i=0;i<records.length;i++){
+            for(int j=0; j<records[i].length;j++){
+                int randomNumber = (int) (Math.random()*((nis[j]-1)+1))+1;
+                records[i][j]=randomNumber;
+            }
+        }
+        return records;
+    }
+    public static int[] NIsGenerator(){
+        int[] nis = new int[20];
+        for(int i=0; i<20; i++){
+            int randomNumber = (int) (Math.random()*((10-1)+1))+1;
+            nis[i] = randomNumber;
+        }
+        return nis;
+
+    }
     public static boolean GrayCode(int[] X, int [] Y){
 
         int d=-1;
@@ -52,17 +88,81 @@ public class Main {
 
     }
 
-    public static int Partition(int[][]record, int left, int right){
-        int[] pivot = record[right];
+    public static long rank(int [] record, int [] nis){
+
+        long i=record[0];
+        long nj= 0;
+        long i2 = 0;
+        for(int j=1; j<record.length-1;j++){
+            nj = nis[j];
+            if(i%2==0){
+                i2=record[j];
+            }else{
+                i2 = nj-1-record[j];
+            }
+            i= (i* nj) + i2;
+        }
+
+        return i;
+    }
+
+    public static long[][] RankSort(int[][] record, int[]nis){
+
+        long [][] record2 = new long[10000][21];
+        //for(int[] r : record){
+
+        for(int s=0;s<record.length;s++){
+
+            int[] r = record[s];
+            long i = 0;
+            //int nj=0;
+            record2[s][0]=record[s][0];
+            i = rank(record[s], nis);
+            for(int j=1; j<r.length; j++){
+                record2[s][j]=record[s][j];
+//                nj = nis[j];
+//                int i2;
+//                if(i % 2== 0){
+//                    i2= r[j];
+//                }
+//                else{
+//                    i2 = nj - 1 -r[j];
+//                }
+//                i= ((i*nj) + i2);
+
+            }
+            record2[s][20] = i;
+
+        }
+
+        record2 = QuickSort(record2, 0, record2.length-1);
+
+        return record2;
+    }
+
+    public static boolean GrayCodeHorners(long[] X, long [] Y){
+
+        if(X[X.length-1]<Y[Y.length-1]){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+
+    public static int Partition(long[][]record, int left, int right){
+        long[] pivot = record[right];
         /*for(int i=0; i<pivot.length; i++){
             System.out.print(pivot[i]);
         }
         System.out.print("\n");*/
-        int [] temp;
+        long [] temp;
         int i = left;
 
         for (int j=left; j<right;j++){
-            if(GrayCode(record[j],pivot)){
+            if(GrayCodeHorners(record[j],pivot)){
                 temp = record[j];
                 record[j] = record[i];
                 record[i] = temp;
@@ -76,7 +176,7 @@ public class Main {
         return i;
     }
 
-    public static int[][] QuickSort(int[][] record, int left, int right){
+    public static long[][] QuickSort(long[][] record, int left, int right){
         if(left<=right){
             int pi = Partition(record, left,right);
             QuickSort(record, left, pi-1);
@@ -124,8 +224,6 @@ public class Main {
         }
     }
 
-
-
     public static int[][] RecordsGenerator(){
         int[][] record = new int[10000][20];
         for(int i=0; i<record.length;i++){
@@ -134,11 +232,12 @@ public class Main {
 
         return record;
     }
+
     public static int[] FieldGenerator(){
         int[] fields = new int[20];
 
         for(int i=0; i<fields.length; i++){
-            int randomNumber = (int) (Math.random()*((10-2)+1))+2;
+            int randomNumber = (int) (Math.random()*((10-1)+1))+1;
             fields[i]=randomNumber;
         }
         return fields;
@@ -192,8 +291,8 @@ public class Main {
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
                     for(int arr=0; arr<tempArray.size();arr++) {
                         //tempArrayOrdered[arrCounter] = reverse(tempArray.get(arr));
+                        //Collections.reverse(tempArray.get(arr));
                         tempArrayOrdered[arrCounter] = tempArray.get(arr);
-
                         arrCounter++;
                     }
                 }
@@ -211,6 +310,16 @@ public class Main {
     }
 
     public static void printRecords(int[][]record){
+        for(int i=0; i<record.length;i++){
+            //record[i] = reverse(record[i]);
+            for(int a =0; a<record[i].length; a++){
+
+                System.out.print(record[i][a] + " ");
+            }
+            System.out.print("\n");
+        }
+    }
+    public static void printRecords(long[][]record){
         for(int i=0; i<record.length;i++){
             //record[i] = reverse(record[i]);
             for(int a =0; a<record[i].length; a++){
