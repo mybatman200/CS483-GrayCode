@@ -25,27 +25,50 @@ public class Main {
 
 
         //Generating each Nis randomly
-        int []nis = NIsGenerator();
-        record = randomNumberGenerator(nis);
-        record2 = record;
-        record3 = record;
+//        int totalIter1=0;
+//        int totalIter2 =0;
+//        int totalIter3 =0;
+        int beforeBinaryTotal=0;
+        int afterBinaryTotal= 0;
+        int beforeFullTotal=0;
+        int afterFullTotal= 0;
+        for(int i=0; i<10; i++) {
+            record1Iter=0;
+            record2Iter =0;
+            record3Iter = 0;
+            int[] nis = NIsGenerator();
+            record = randomNumberGenerator(nis);
+            record2 = record;
+            record3 = record;
 
-        int[] scoreBefore = CalculateScore(record);
+            int[] scoreBefore = CalculateScore(record);
 
-        System.out.println("BinaryScore: "+ scoreBefore[0] + " fullScore: "+ scoreBefore[1]);
-        WriteToFile(record, "Pre_Sort_Record.txt");
 
-        int [][]radixRecord = RadixSort1(record);
-        int [][] grayOrderRecord = MergeSort(record2,0, record2.length-1);
-        long [][]hornersRecord = RankSort(record3, nis);
+            WriteToFile(record, "Pre_Sort_Record" + i + ".txt");
 
-        int[] scoreAfter = CalculateScore(record);
-        WriteToFile(radixRecord,"radixRecord.txt");
-        WriteToFile(grayOrderRecord,"grayOrderRecord.txt");
-        WriteToFile(hornersRecord,"hornersRecord.txt");
+            int[][] radixRecord = RadixSort1(record);
+            int[][] grayOrderRecord = MergeSort(record2, 0, record2.length - 1);
+            long[][] hornersRecord = RankSort(record3, nis);
 
-        WriteCountToFile(record1Iter,record2Iter,record3Iter, scoreBefore[0], scoreBefore[1], scoreAfter[0], scoreAfter[1], "SortCount.txt");
-        //printRecords(record31);
+            int[] scoreAfter = CalculateScore(record);
+            WriteToFile(radixRecord, "radixRecord" + i + ".txt");
+            WriteToFile(grayOrderRecord, "grayOrderRecord" + i + ".txt");
+            WriteToFile(hornersRecord, "hornersRecord" + i + ".txt");
+
+            WriteCountToFile(record1Iter, record2Iter, record3Iter, scoreBefore[0], scoreBefore[1], scoreAfter[0], scoreAfter[1], "SortCount" + i + ".txt");
+//            totalIter1 =totalIter1+record1Iter;
+//            totalIter2 = totalIter2+ record2Iter;
+//            totalIter3 = totalIter3+ record3Iter;
+            beforeBinaryTotal = beforeBinaryTotal+ scoreBefore[0];
+            beforeFullTotal = beforeFullTotal + scoreBefore[1];
+            afterBinaryTotal = afterBinaryTotal+scoreAfter[0];
+            afterFullTotal = afterFullTotal+ scoreAfter[1];
+        }
+
+        System.out.println("Before Binary Score Average: " + (beforeBinaryTotal/10) + " Before Full Score Average: " + (beforeFullTotal/10));
+        System.out.println("After Binary Score Average: " + (afterBinaryTotal/10) + " After Full Score Average: " + (afterFullTotal/10));
+
+
     }
 
     public static int[][] randomNumberGenerator(int []nis){
@@ -133,12 +156,12 @@ public class Main {
             if(i%2==0){
                 i2=record[j];
             }else{
-                i2 = n-1-record[j];
+                i2 = 10-1-record[j];
             }
-            i= (i* n) + i2;
+            i= (i* 10) + i2;
         }
 
-        return i;
+        return i/20;
     }
 
     public static boolean GrayCodeHorners(long[] X, long [] Y){
@@ -413,7 +436,7 @@ public class Main {
         Method to write records to file
      */
     public static void WriteToFile(int[][] record, String name) throws IOException{
-        String strFilePath = "/Users/tringuyen/Desktop/"+name;
+        String strFilePath = "/Users/tringuyen/Desktop/483/"+name;
         BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
         writer.append("");
         String str = "";
@@ -430,7 +453,7 @@ public class Main {
 
     }
     public static void WriteToFile(long[][] record, String name) throws IOException{
-        String strFilePath = "/Users/tringuyen/Desktop/"+name;
+        String strFilePath = "/Users/tringuyen/Desktop/483/"+name;
         BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
         writer.append("");
         String str = "";
@@ -448,7 +471,7 @@ public class Main {
     }
 
     public static void WriteCountToFile(int i1, int i2, int i3, int binaryScore_before, int fullScore_before, int binaryScore_after, int fullScore_after,String name) throws IOException{
-        String strFilePath = "/Users/tringuyen/Desktop/"+name;
+        String strFilePath = "/Users/tringuyen/Desktop/483/"+name;
         BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
         writer.append("");
         String str = "grayCount:"+i1 + "\n";
