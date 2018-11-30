@@ -34,23 +34,26 @@ public class Main {
         record2 = record;
         record3 = record;
         /***/
-
+        WriteToFile(record, "Pre_Sort_Record.txt");
         int count =0;
 
         int [][] radixRecord = new int[10000][20];
         radixRecord = RadixSort1(record);
-        printRecords(radixRecord);
+        //printRecords(radixRecord);
 
         int [][] grayOrderRecord = new int[10000][20];
         grayOrderRecord = MergeSort(record2,0, record2.length-1);
         //printRecords(record2);
 
         long [][]hornersRecord = RankSort(record3, nis);
+
+
+
         WriteToFile(radixRecord,"radixRecord.txt");
         WriteToFile(grayOrderRecord,"grayOrderRecord.txt");
         WriteToFile(hornersRecord,"hornersRecord.txt");
 
-
+        WriteCountToFile(record1Iter,record2Iter,record3Iter, "SortCount.txt");
         //printRecords(record31);
     }
 
@@ -100,7 +103,7 @@ public class Main {
     }
 
     /**
-     *RankSort
+     *RankSort / HornersSort
      * support methods: rank(), GrayCodeHorners()
      */
     public static long[][] RankSort(int[][] record, int[]nis){
@@ -109,13 +112,14 @@ public class Main {
         //for(int[] r : record){
 
         for(int s=0;s<record.length;s++){
-
+            record2Iter++;
             int[] r = record[s];
             long i = 0;
             record2[s][0]=record[s][0];
             i = rank(record[s], nis);
             for(int j=1; j<r.length; j++){
                 record2[s][j]=record[s][j];
+                record2Iter++;
             }
             record2[s][20] = i;
 
@@ -125,12 +129,14 @@ public class Main {
 
         return record2;
     }
+
     public static long rank(int [] record, int [] nis){
 
         long i=record[0];
         long n= 0;
 
         for(int j=1; j<record.length-1;j++){
+            record2Iter++;
             long i2 = 0;
             n = nis[j];
             if(i%2==0){
@@ -143,8 +149,6 @@ public class Main {
 
         return i;
     }
-
-
 
     public static boolean GrayCodeHorners(long[] X, long [] Y){
 
@@ -197,7 +201,6 @@ public class Main {
         return i;
     }
 
-
     /**
         MergeSort
         support method: merge()
@@ -245,10 +248,7 @@ public class Main {
         }
     }
 
-    /*
-        MergeSort
-        support method: merge
-     */
+
     public static long[][] MergeSort(long [][] record1, int left, int right) {
 
         if (left < right) {
@@ -296,17 +296,16 @@ public class Main {
     RadixSort Method
      */
     public static int[][] RadixSort1(int [][] record){
-        int numb_iteration = 0;
 
         for(int i=0; i<20; i++){
+            record3Iter++;
             int[][]tempArrayOrdered = new int[10000][20];
 
             HashMap<Integer, ArrayList<int[]>> sortedHash = new HashMap<Integer, ArrayList<int[]>>(); // Store a key and its value of each of the element of the array and key is the element at the field
             int numbCount=0;
 
             for(int a=0; a<record.length;a++) {
-
-                numb_iteration++;
+                record3Iter++;
 
                 ArrayList<int[]> tempArray = new ArrayList<int[]>();
                 int numb = record[a][i]; // element at each record
@@ -323,7 +322,7 @@ public class Main {
             ArrayList<Integer> sortedKeyList = new ArrayList<Integer>();// store a sortedkeylist
             for(int key: sortedHash.keySet()){
                 sortedKeyList.add(key);
-
+                record3Iter++;
             }
             Collections.sort(sortedKeyList);// sort the key
 
@@ -332,6 +331,7 @@ public class Main {
 
             //get key from the sorted keylist and append it into the array
             for(int a=0; a<sortedKeyList.size();a++){
+                record3Iter++;
                 if(counter%2 ==0){
                     ArrayList<int[]> tempArray = sortedHash.get(sortedKeyList.get(a));
                     for(int arr=tempArray.size()-1; arr>=0;arr--){
@@ -454,6 +454,20 @@ public class Main {
 
         writer.close();
 
+    }
+
+    public static void WriteCountToFile(int i1, int i2, int i3, String name) throws IOException{
+        String strFilePath = "/Users/tringuyen/Desktop/"+name;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
+        writer.append("");
+        String str = "grayCount:"+i1 + "\n";
+        writer.append(str);
+        String str2 = "hornersCount:"+i2+ "\n";
+        writer.append(str2);
+        String str3 = "radixCount:"+i3+ "\n";
+        writer.append(str3);
+
+        writer.close();
     }
 
 
