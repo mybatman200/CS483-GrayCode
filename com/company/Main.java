@@ -18,42 +18,33 @@ public class Main {
         int [][] record2 = new int[10000][20];
         int [][] record3 = new int[10000][20];
 
-        /**
-         * Generating Nis randomly from 1-10
-         */
+         // Generating Nis randomly from 1-10
 //        record = RecordsGenerator();
 //        record2 = record;
-        //record3 = record;
+//        record3 = record;
 
 
-        /**
-         * Generating each Nis randomly
-         */
+        //Generating each Nis randomly
         int []nis = NIsGenerator();
         record = randomNumberGenerator(nis);
         record2 = record;
         record3 = record;
-        /***/
+
+        int[] scoreBefore = CalculateScore(record);
+
+        System.out.println("BinaryScore: "+ scoreBefore[0] + " fullScore: "+ scoreBefore[1]);
         WriteToFile(record, "Pre_Sort_Record.txt");
-        int count =0;
 
-        int [][] radixRecord = new int[10000][20];
-        radixRecord = RadixSort1(record);
-        //printRecords(radixRecord);
-
-        int [][] grayOrderRecord = new int[10000][20];
-        grayOrderRecord = MergeSort(record2,0, record2.length-1);
-        //printRecords(record2);
-
+        int [][]radixRecord = RadixSort1(record);
+        int [][] grayOrderRecord = MergeSort(record2,0, record2.length-1);
         long [][]hornersRecord = RankSort(record3, nis);
 
-
-
+        int[] scoreAfter = CalculateScore(record);
         WriteToFile(radixRecord,"radixRecord.txt");
         WriteToFile(grayOrderRecord,"grayOrderRecord.txt");
         WriteToFile(hornersRecord,"hornersRecord.txt");
 
-        WriteCountToFile(record1Iter,record2Iter,record3Iter, "SortCount.txt");
+        WriteCountToFile(record1Iter,record2Iter,record3Iter, scoreBefore[0], scoreBefore[1], scoreAfter[0], scoreAfter[1], "SortCount.txt");
         //printRecords(record31);
     }
 
@@ -456,7 +447,7 @@ public class Main {
 
     }
 
-    public static void WriteCountToFile(int i1, int i2, int i3, String name) throws IOException{
+    public static void WriteCountToFile(int i1, int i2, int i3, int binaryScore_before, int fullScore_before, int binaryScore_after, int fullScore_after,String name) throws IOException{
         String strFilePath = "/Users/tringuyen/Desktop/"+name;
         BufferedWriter writer = new BufferedWriter(new FileWriter(strFilePath));
         writer.append("");
@@ -466,8 +457,44 @@ public class Main {
         writer.append(str2);
         String str3 = "radixCount:"+i3+ "\n";
         writer.append(str3);
-
+        String str4 = "binary score before:"+binaryScore_before+ "\n";
+        writer.append(str4);
+        String str5 = "full score before:"+fullScore_before+ "\n";
+        writer.append(str5);
+        String str6 = "binary score after:"+binaryScore_after+ "\n";
+        writer.append(str6);
+        String str7 = "full score after:"+fullScore_after+ "\n";
+        writer.append(str7);
         writer.close();
+    }
+
+    public static int[] CalculateScore(int[][] records){
+        int binary_score=0;
+        int full_score =0;
+        for(int j=0; j<records[0].length; j++){
+            for(int i=1; i<records.length; i++){
+                if(records[i][j] != records[i-1][j]){
+                    binary_score++;
+                    full_score = full_score + Math.abs(records[i][j]-records[i-1][j]);
+                }
+            }
+        }
+        int [] scores = {binary_score, full_score};
+        return scores;
+    }
+    public static int[] CalculateScore(long[][] records){
+        int binary_score=0;
+        int full_score =0;
+        for(int j=0; j<records[0].length; j++){
+            for(int i=1; i<records.length; i++){
+                if(records[i][j] != records[i-1][j]){
+                    binary_score++;
+                    full_score = full_score +  (int) Math.abs(records[i][j]-records[i-1][j]);
+                }
+            }
+        }
+        int [] scores = {binary_score, full_score};
+        return scores;
     }
 
 
