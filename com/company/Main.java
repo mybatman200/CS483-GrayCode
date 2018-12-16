@@ -131,7 +131,6 @@ public class Main {
     public static long[][] RankSort(int[][] record, int[]nis){
 
         long [][] record2 = new long[10000][21];
-        //for(int[] r : record){
 
         for(int s=0;s<record.length;s++){
             record2Iter++;
